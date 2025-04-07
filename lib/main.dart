@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:world_news_api/controller/category_controller.dart';
 import 'package:world_news_api/controller/news_controller.dart';
 import 'package:world_news_api/view/homescreen_view/homescreen_view.dart';
 
@@ -8,6 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NewsController()),
+        ChangeNotifierProvider(create: (context) => CategoryController()),
       ],
       child: const WorldNewsApi(),
     ),

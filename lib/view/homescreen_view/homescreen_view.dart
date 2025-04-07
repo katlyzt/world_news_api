@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:world_news_api/constants/category.dart';
+import 'package:world_news_api/controller/category_controller.dart';
 import 'package:world_news_api/controller/news_controller.dart';
 import 'package:world_news_api/view/articledetails_screen_view/articledetails_screen_view.dart';
 
@@ -13,15 +15,19 @@ class HomescreenView extends StatefulWidget {
 
 class _HomescreenViewState extends State<HomescreenView> {
   @override
+  @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<NewsController>().fetchTopHeadlines());
+    Future.microtask(() {
+      context.read<NewsController>().fetchTopHeadlines();
+      // context.read<CategoryController>().fetchCategory(selectedCategory);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final data = context.watch<NewsController>();
-    // final method = context.read<NewsController>();
+    final categoryData = context.watch<CategoryController>();
     return Scaffold(
       appBar: AppBar(title: Text("News")),
       body: Consumer(
@@ -29,7 +35,39 @@ class _HomescreenViewState extends State<HomescreenView> {
           return ListView(
             children: [
               // Category section
-
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 10,
+                ),
+                child: SizedBox(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: newsCategories.length,
+                    itemBuilder: (context, index) {
+                      final category = newsCategories[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            category[0].toUpperCase() + category.substring(1),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
               // Breaking News - Carousel
               CarouselSlider(
                 options: CarouselOptions(
